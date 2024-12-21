@@ -1,0 +1,25 @@
+---
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become: yes # run as root
+
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: latest
+  become: yes # run as root
+
+- name: Allow traffic on port 80
+  ansible.builtin.ufw:
+    rule: allow
+    name: 'Nginx HTTP'
+  become: yes # run as root
+
+- name: Enable NGINX service
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: yes
+    state: started
+

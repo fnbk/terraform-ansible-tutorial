@@ -1,0 +1,11 @@
+---
+# Create a file "last-deployment.txt" in the users home directory and write the deployment timestamp.
+
+- name: Get current timestamp
+  ansible.builtin.set_fact:
+    current_timestamp: "{{ ansible_date_time.iso8601 }}"
+
+- name: Overwrite last-deployment.txt with the current timestamp
+  ansible.builtin.copy:
+    content: "{{ current_timestamp }}\n"
+    dest: "/home/{{ ansible_user }}/last-deployment.txt"

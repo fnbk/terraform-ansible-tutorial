@@ -1,0 +1,17 @@
+
+# public/private keys
+id_rsa
+id_rsa.pub
+
+# terraform
+*.tfstate
+*.tfstate.backup
+.terraform
+.terraform.*
+
+# ignore terraform generated output files
+terraform/inventory.yml
+ansible/inventory.yml
+
+# .env files
+.*.env
