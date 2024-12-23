@@ -1,31 +1,31 @@
-# Terraform and Ansible Integration  
+# Terraform and Ansible Integration
 
-## Overview  
+## Overview
 
-This project demonstrates a basic integration of Terraform with Ansible to provision and configure a Virtual Machine in Azure. The step-by-step guide below includes prerequisites setup, infrastructure provisioning, VM configuration, connection testing, and teardown.  
+This project demonstrates a basic integration of Terraform with Ansible to provision and configure a Virtual Machine in Azure. The step-by-step guide below includes prerequisites setup, infrastructure provisioning, VM configuration, connection testing, and teardown. This guide is an extension of the Tutorial discussed in the article: "[Terraform and Ansible on Azure: Building Robust Infrastructure on Cloud Platforms](https://medium.com/itnext/terraform-and-ansible-on-azure-9bb740746e3a)."
 
-### Prerequisites  
+### Prerequisites
 
-- Ensure you are in a Linux environment. If you're on Windows, use [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install).  
-- Install [Terraform](https://www.terraform.io/downloads.html) and [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).  
+- Ensure you are in a Linux environment. If you're on Windows, use [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install).
+- Install [Terraform](https://www.terraform.io/downloads.html) and [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
 
-### Workflow  
+### Workflow
 
-1. Provision infrastructure using Terraform:  
-    - Resource Group  
-    - Virtual Network and Subnet  
-    - Public IP and Network Interface  
-    - Virtual Machine with SSH keys  
-    - Generate `inventory.yml` file for Ansible  
-2. Configure the Virtual Machine with Ansible:  
-    - Install Nginx  
-    - Create a `last-deployment.txt` file containing deployment timestamp  
-3. Test VM and Nginx connection:  
-    - Use `curl` to access the Nginx default page  
-    - Check the `last-deployment.txt` contents  
-4. Teardown:  
-    - Destroy provisioned infrastructure  
-    - Cleanup local files  
+1. Provision infrastructure using Terraform:
+    - Resource Group
+    - Virtual Network and Subnet
+    - Public IP and Network Interface
+    - Virtual Machine with SSH keys
+    - Generate `inventory.yml` file for Ansible
+2. Configure the Virtual Machine with Ansible:
+    - Install Nginx
+    - Create a `last-deployment.txt` file containing deployment timestamp
+3. Test VM and Nginx connection:
+    - Use `curl` to access the Nginx default page
+    - Check the `last-deployment.txt` contents
+4. Teardown:
+    - Destroy provisioned infrastructure
+    - Cleanup local files
 
 ## Directory Structure
 
@@ -82,7 +82,7 @@ export SSH_PRIVATE_KEY=/home/user/.ssh/adminuser
 ## Provision Virtual Machine (Terraform)
 
 ```bash
-# Navigate to Terraform directory 
+# Navigate to Terraform directory
 cd terraform
 
 # Initialize Terraform
@@ -106,7 +106,7 @@ terraform apply -auto-approve \
 
 ```bash
 
-# Move to the Ansible directory  
+# Move to the Ansible directory
 cd ../ansible
 
 # Copy the inventory file created by Terraform
@@ -119,14 +119,14 @@ ansible-playbook -i inventory.yml playbooks/main.yml --extra-vars "ansible_ssh_p
 ## Check
 
 ```bash
-# Retrieve the IP address from the inventory file 
+# Retrieve the IP address from the inventory file
 export VM_IP_ADDRESS=$(awk '/hosts/ { getline; print $1 }' inventory.yml | awk -F\" '{print $2}')
 echo $VM_IP_ADDRESS
 
-# Test the Nginx default page  
+# Test the Nginx default page
 curl $VM_IP_ADDRESS
 
-# Log in to the VM and verify the last-deployment.txt file 
+# Log in to the VM and verify the last-deployment.txt file
 ssh -i $SSH_PRIVATE_KEY $ADMINUSER@$VM_IP_ADDRESS
 ls -lisa
 cat last-deployment.txt
@@ -138,7 +138,7 @@ cat last-deployment.txt
 # Switch to the Terraform directory for teardown
 cd ../terraform
 
-# Destroy all Terraform-managed infrastructure without prompt 
+# Destroy all Terraform-managed infrastructure without prompt
 terraform destroy -auto-approve \
     -var="ssh_public_key_path=$SSH_PUBLIC_KEY" \
     -var="subscription=$AZURE_SUBSCRIPTION" \
@@ -149,3 +149,11 @@ cd ..
 rm ansible/inventory.yml
 rm terraform/inventory.yml
 ```
+
+# Conclusion
+
+Congratulations on completing this step-by-step journey of integrating Terraform with Ansible to build and manage infrastructure on Azure. If you've followed along, you've now seen how these powerful tools work in tandem to provision and fine-tune a virtual environment capable of hosting a web service.
+
+For the complete guide and deeper insights, refer to the article "[Terraform and Ansible on Azure: Building Robust Infrastructure on Cloud Platforms](https://medium.com/itnext/terraform-and-ansible-on-azure-9bb740746e3a)."
+
+Feel free to explore, fork, and adopt these patterns in your projects.
